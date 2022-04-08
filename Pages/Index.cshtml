@@ -1,0 +1,91 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<link href="~/css/home.css" rel='stylesheet' asp-append-version="true" type='text/css' />
+
+<div class="text-center">
+    @{ 
+        DateTime currentD = DateTime.Now;
+        DateTime prevMonth = currentD.AddMonths(-1);
+        DateTime nextMonth = currentD.AddMonths(1);
+    }
+    <div class="image_head">
+        <img src="~/images/Schedule_img.jpg" class="image" alt="Calender" />
+        <h1 class="display-4">Welcome to the Ideal Scheduling Page.</h1>
+    </div>
+    <div class="summary">
+        <u class="underline_summary">Summary:</u>
+        <p>
+            Here is the site you have dreamed if you want to organize how you go about your day.
+            You can add tasks for each day and view them on the calender below. This easy-to-use interfaces includes a
+            search bar, and a section where you can view your 3 most recent events. Convenient to use,
+            life-changing to implement.
+        </p>
+    </div>
+    <b>Most Recent Events</b>
+    <div class="three_recent">
+        @foreach (var item in Model.FirstThree)
+        {
+            <div class="recent_E">
+                Event:    @Html.DisplayFor(modelItem => item.Description)
+                <hr class="event_seperator" />
+                Start Time/Date:    @Html.DisplayFor(modelItem => item.Event_StartTime)
+                <hr class="event_seperator" />
+                End Time/Date:  @Html.DisplayFor(modelItem => item.Event_EndTime)
+            </div>
+        }
+    </div>
+    <b style=margin-bottom:20px>@DateTime.Now.ToString("MMMM") Schedule</b>
+    <div class="schedule">
+        @{
+            string[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            foreach (string day in days)
+            {
+                <div class="schedule_dayHeader">
+                    <p>@day</p>
+                </div>
+            }
+            for (int i2 = 0; i2 < (int)startDate.DayOfWeek; i2++)
+            {
+                <div class="empty_datebox">
+                </div>
+            }
+
+            for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
+            {
+                DateTime dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i);
+                IList<Models.Event> scheduledE = Model.ScheduleMatchEntries(dt);
+                <div class="schedule_datebox">
+                    <p>@dt.Day</p>
+                    @if (scheduledE != null)
+                    {
+                         foreach (var item in scheduledE)
+                         {
+                            DateTime converted = TimeZoneInfo.ConvertTime(item.Event_StartTime, TimeZoneInfo.Local);
+                            <p class="date_info">@item.Description</p>
+                            <p class="date_info">@converted</p>
+                            <a asp-page="./EventList/Details" asp-route-id="@item.ID">Details</a>
+                            <br />
+                        }
+                    }
+                </div> 
+            }
+            int empty_endCells = (7 - ((int)startDate.DayOfWeek - 1 + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % 7) % 7;
+            for (int i = 0; i < empty_endCells; i++)
+            {
+                <div class="empty_datebox">
+                </div>
+            }
+        }
+    </div>
+    <div class="nextprevious_months">
+        <a asp-page="./Calender" asp-route-time="@wwwroot.cs.TimeUtils.DateToString(prevMonth)">
+            @prevMonth.ToString("MMMM")</a>
+        <a asp-page="./Calender" asp-route-time="@wwwroot.cs.TimeUtils.DateToString(nextMonth)">
+            @nextMonth.ToString("MMMM")</a>
+    </div>
+</div>

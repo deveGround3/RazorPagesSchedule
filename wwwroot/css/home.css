@@ -1,0 +1,74 @@
+﻿
+.date_info {
+    margin-bottom: 4px;
+}
+.empty_datebox {
+    background-color:darkgray;
+}
+.event_seperator {
+    border-style: dashed;
+}
+.image {
+    width: 80%;
+    /*clip-path:inset(0px 70px 280px);*/
+    max-height: 275px;
+    overflow: hidden;
+}
+.image_head {
+    position: relative;
+    margin-bottom: 30px;
+}
+.nextprevious_months {
+    display: flex;
+    flex-direction: row;
+    column-count:2;
+    justify-content: space-around;
+    margin-top: 27.5px;
+}
+.schedule {
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    column-count: 7;
+    margin-top: 30px;
+}
+.schedule_datebox, .empty_datebox {
+    border: 1px solid black;
+    width: 13.5%;
+}
+.schedule_datebox a {
+    font-size:11px;
+}
+.schedule_dayHeader {
+    width: 13.5%;
+}
+.summary {
+    min-height: 120px;
+    max-width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-between;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.three_recent {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    column-count: 3;
+    padding-bottom: 25px;
+    min-width: 80%;
+    align-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+}
+.recent_E {
+    border: 1px solid black;
+    background-color: mediumaquamarine;
+    padding-bottom:10px;
+    /*justify-self:center;*/
+    /*border-width: 4px;*/
+}
+
+
