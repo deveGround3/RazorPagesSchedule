@@ -1,0 +1,66 @@
+﻿@page 
+@model RazorPagesSchedule.Pages.CalenderModel
+@{
+    ViewData["Title"] = "Calender";
+}
+<!--Page to Display Calender for a specified Month.-->
+<link href="~/css/calender.css" rel='stylesheet' asp-append-version="true" type='text/css' />
+
+<div class="text-center">
+    @{
+        var calenderDate = Model.CalenderD;
+    }
+    <b style=margin-bottom:20px>@calenderDate.ToString("MMMM") Schedule</b>
+    <div class="schedule">
+        @{
+            string[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+            DateTime startDate = new DateTime(calenderDate.Year, calenderDate.Month, 1);
+            foreach (string day in days)
+            {
+                <div class="schedule_dayHeader">
+                    <p>@day</p>
+                </div>
+            }
+            for (int i2 = 0; i2 < (int)startDate.DayOfWeek; i2++)
+            {
+                <div class="empty_datebox">
+                </div>
+            }
+            DateTime startDate_C = startDate; //copy of startDate so original doesn't get modified
+            for (int i = 1; i <= DateTime.DaysInMonth(startDate_C.Year, startDate_C.Month); i++)
+            {
+                //DateTime dt = new DateTime(ca.Year, DateTime.Now.Month, i);
+                IList<Models.Event> scheduledE = Model.ScheduleMatchEntries(startDate_C);
+                <div class="schedule_datebox">
+                    <p>@startDate_C.Day</p>
+                    @if (scheduledE != null)
+                    {
+                        foreach (var item in scheduledE)
+                        {
+                            DateTime converted = TimeZoneInfo.ConvertTime(item.Event_StartTime, TimeZoneInfo.Local);
+                            <p class="date_info">@item.Description</p>
+                            <p class="date_info">@converted</p>
+                            <a asp-page="./EventList/Details" asp-route-id="@item.ID">Edit</a>
+                            <br />
+                        }
+                    }
+                </div>
+                startDate_C = startDate_C.AddDays(1);
+                System.Diagnostics.Debug.WriteLine(i);
+            }
+            int empty_endCells = (7 - ((int)startDate.DayOfWeek - 1 + DateTime.DaysInMonth(startDate.Year, startDate.Month)) % 7) % 7;
+            for (int i = 0; i < empty_endCells; i++)
+            {
+                <div class="empty_datebox">
+                </div>
+            }
+        }
+    </div>
+    <div class="nextprevious_months">
+        <a asp-page = "./Calender" asp-route-time="@wwwroot.cs.TimeUtils.DateToString(calenderDate.AddMonths(-1))">
+            @calenderDate.AddMonths(-1).ToString("MMMM")</a>
+        <a asp-page = "./Calender" asp-route-time="@wwwroot.cs.TimeUtils.DateToString(calenderDate.AddMonths(1))">
+            @calenderDate.AddMonths(1).ToString("MMMM")</a>
+    </div>
+</div>
+
